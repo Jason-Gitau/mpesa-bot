@@ -1,9 +1,10 @@
-# M-Pesa Telegram Bot
+# M-Pesa Telegram Bot with Escrow Protection
 
-A Python-based Telegram bot that integrates with Safaricom's M-Pesa (Daraja API) to facilitate mobile payments directly through Telegram. This bot allows users to initiate M-Pesa STK Push payments and receive transaction notifications in real-time.
+A Python-based Telegram bot that integrates with Safaricom's M-Pesa (Daraja API) to facilitate secure mobile payments with built-in escrow protection. This bot enables buyers and sellers to transact safely, with payments held in escrow until delivery is confirmed.
 
 ## Features
 
+### Core Features
 - **M-Pesa Integration**: Seamless integration with Safaricom's Daraja API for STK Push payments
 - **Telegram Bot Interface**: User-friendly commands for payment initiation
 - **Real-time Notifications**: Instant transaction updates for both buyers and sellers
@@ -11,6 +12,73 @@ A Python-based Telegram bot that integrates with Safaricom's M-Pesa (Daraja API)
 - **Transaction Tracking**: Database storage for all payment transactions
 - **Callback Handling**: FastAPI webhook endpoint for M-Pesa callbacks
 - **Chat Memory**: Conversation tracking for enhanced user experience
+
+### Escrow System Features 🛡️
+- **Payment Protection**: Funds held securely in escrow until delivery confirmed
+- **Buyer Protection**: 100% money-back guarantee for non-delivery or fraud
+- **Seller Verification**: ID and business verification for trusted sellers
+- **Dispute Resolution**: Professional admin-mediated dispute handling
+- **Automatic Refunds**: Auto-refund if seller doesn't ship on time
+- **Rating System**: Buyer and seller ratings for transparency
+- **Transaction States**: Complete lifecycle management (pending → paid → shipped → delivered → completed)
+- **Evidence Management**: Photo/video upload support for disputes
+- **Multi-layer Security**: Fraud detection, pattern recognition, and account monitoring
+
+## Escrow System Overview
+
+### How It Works
+
+```
+1. BUYER ORDERS → Creates escrow transaction
+2. BUYER PAYS → Funds locked in escrow (not sent to seller)
+3. SELLER SHIPS → Tracking number provided
+4. BUYER CONFIRMS → Delivery verification
+5. PAYMENT RELEASED → Seller receives funds (24 hours after confirmation)
+```
+
+### Protection Features
+
+**For Buyers:**
+- ✓ Money held safely until you receive your item
+- ✓ Full refund if item not received or not as described
+- ✓ Dispute resolution with evidence review
+- ✓ Protection for 7 days after shipping
+- ✓ Only pay through secure escrow system
+
+**For Sellers:**
+- ✓ Guaranteed payment once you deliver
+- ✓ Protection against false buyer claims
+- ✓ Faster payment (24hrs) with verification
+- ✓ Lower fees (1%) when verified
+- ✓ Reputation building with ratings
+
+### Quick Start
+
+**For Buyers:**
+```bash
+/buy iPhone 13 Pro 95000 @seller  # Create order
+[Click Pay Now]                    # Pay via M-Pesa
+[Wait for delivery]                # Track shipment
+/confirm_delivery ESC-123          # Release payment
+```
+
+**For Sellers:**
+```bash
+/verify_seller                     # Get verified (recommended)
+[Receive order notification]       # When buyer pays
+/mark_shipped ESC-123 TRACK-001   # Mark as shipped
+[Wait for confirmation]            # Buyer confirms
+[Receive payment]                  # Auto-released to M-Pesa
+```
+
+### Documentation
+
+📚 **Complete Guides:**
+- [Escrow User Guide](/ESCROW_GUIDE.md) - Complete guide for buyers and sellers
+- [Fraud Prevention](/FRAUD_PREVENTION.md) - Security best practices
+- [Quick Start](/ESCROW_QUICKSTART.md) - Get started in 5 minutes
+- [API Documentation](/ESCROW_API.md) - Developer integration guide
+- [Flow Diagrams](/escrow_flow_diagram.txt) - Visual transaction flows
 
 ## Project Structure
 
@@ -218,8 +286,35 @@ Once your bot is running, users can interact with it using these commands:
 - `/status` - Check payment status
 - `/cancel` - Cancel the current payment process
 
+### Escrow Commands (Buyer)
+- `/buy <item> <amount> <seller>` - Create secure escrow transaction
+  - Example: `/buy iPhone 13 Pro 95000 @johnseller`
+- `/confirm_delivery <escrow_id>` - Confirm item received and release payment
+- `/dispute <escrow_id> <reason>` - File dispute if there's an issue
+- `/attach_evidence <escrow_id>` - Upload photos/videos for dispute
+- `/contact_seller <escrow_id>` - Send message to seller
+- `/my_orders` - View all your orders
+- `/status <escrow_id>` - Check order status
+
+### Escrow Commands (Seller)
+- `/verify_seller` - Start seller verification process
+- `/mark_shipped <escrow_id> <tracking>` - Mark order as shipped
+- `/respond_dispute <dispute_id>` - Respond to buyer dispute
+- `/my_sales` - View all your sales
+- `/verification_status` - Check verification status
+- `/seller_stats` - View your seller statistics
+
+### Escrow Commands (Admin)
+- `/admin` - Access admin dashboard
+- `/disputes` - View all active disputes
+- `/resolve_dispute <dispute_id>` - Resolve a dispute
+- `/suspend_user <username>` - Suspend user account
+- `/ban_user <username>` - Ban user permanently
+- `/stats` - View platform statistics
+
 ### Example Usage
 
+#### Basic Payment
 1. **Initiate Payment**:
    ```
    User: /pay 254712345678 500
@@ -236,6 +331,58 @@ Once your bot is running, users can interact with it using these commands:
    ```
    User: /status
    Bot: Payment status check results...
+   ```
+
+#### Escrow Transaction
+1. **Buyer Creates Order**:
+   ```
+   User: /buy iPhone 13 Pro 256GB 95000 @johnseller
+   Bot: Order Summary:
+        Item: iPhone 13 Pro 256GB
+        Price: KES 95,000
+        Seller: @johnseller ✓ (4.8⭐, 156 sales)
+        Escrow Fee: KES 950 (1%)
+        Total: KES 95,950
+        [✅ Pay Now] [❌ Cancel]
+   ```
+
+2. **Payment Held in Escrow**:
+   ```
+   [Buyer clicks Pay Now and enters M-Pesa PIN]
+
+   Bot → Buyer: ✓ Payment Successful!
+                Escrow ID: ESC-20251122-00123
+                KES 95,000 HELD IN ESCROW
+
+   Bot → Seller: NEW ORDER! 🎉
+                 ESC-20251122-00123
+                 KES 95,000 (HELD)
+                 Ship by: Nov 24, 6:00 PM
+   ```
+
+3. **Seller Ships Item**:
+   ```
+   Seller: /mark_shipped ESC-20251122-00123 EMS-KE-123456
+   Bot → Buyer: Your order shipped! 📦
+                Tracking: EMS-KE-123456
+   ```
+
+4. **Buyer Confirms Delivery**:
+   ```
+   [Buyer receives item, inspects it]
+
+   Buyer: /confirm_delivery ESC-20251122-00123
+   Bot: ✓ Delivery confirmed!
+        Payment releasing to seller in 24 hours
+   ```
+
+5. **Payment Released**:
+   ```
+   [24 hours later]
+
+   Bot → Seller: 💰 PAYMENT RELEASED!
+                 Amount: KES 94,050
+                 M-Pesa Receipt: MPX7RT61SV
    ```
 
 ## Deployment

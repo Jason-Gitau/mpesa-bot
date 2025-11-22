@@ -28,6 +28,9 @@ python-dateutil==2.8.2
 # Async Support
 aiofiles==23.2.1
 
+# Task Scheduling
+APScheduler==3.10.4
+
 # Logging
 colorlog==6.8.0
 
