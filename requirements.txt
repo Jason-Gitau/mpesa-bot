@@ -1,0 +1,48 @@
+# Core dependencies for M-Pesa Telegram Bot
+
+# Telegram Bot Framework
+python-telegram-bot==20.7
+
+# HTTP Requests
+requests==2.31.0
+httpx==0.25.2
+
+# M-Pesa Integration
+daraja==1.0.0
+
+# Web Framework for Callbacks
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Database Drivers
+aiomysql==0.2.0
+pymysql==1.1.0
+psycopg2-binary==2.9.9
+
+# Environment Variables
+python-dotenv==1.0.0
+
+# Date and Time
+python-dateutil==2.8.2
+
+# Async Support
+aiofiles==23.2.1
+
+# Task Scheduling
+APScheduler==3.10.4
+
+# Logging
+colorlog==6.8.0
+
+# Security
+cryptography==41.0.7
+
+# Data Validation
+pydantic==2.5.2
+
+# JSON Web Tokens (optional)
+PyJWT==2.8.0
+
+# Testing (optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
